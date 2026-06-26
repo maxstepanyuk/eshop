@@ -19,7 +19,7 @@ export function renderCategories(categories) {
   }
 }
 
-export function renderProducts(products) {    
+export function renderProducts(products) {
   const markup = products
     .map(({ id, thumbnail, title, brand, category, price }) => {
       return `<li class="products__item" data-id="${id}">
@@ -35,4 +35,45 @@ export function renderProducts(products) {
     .join('');
 
   refs.productsList.insertAdjacentHTML('beforeend', markup);
+}
+
+export function renderProductModal({
+  thumbnail,
+  title,
+  category,
+  description,
+  price,
+  shippingInformation,
+  returnPolicy,
+  tags,
+}) {
+  const tagsMarkup = tags
+    ? tags.map(tag => `<li class="modal-product__tag">${tag}</li>`).join('')
+    : '';
+
+  const markup = `
+      <img class="modal-product__img" src="${thumbnail}" alt="${title}" />
+      <div class="modal-product__content">
+        <p class="modal-product__title">${title}</p>
+        <ul class="modal-product__tags">${tagsMarkup}</ul>
+        <p class="modal-product__description">${description}</p>
+        <p class="modal-product__shipping-information">Shipping: ${shippingInformation}</p>
+        <p class="modal-product__return-policy">Return Policy: ${returnPolicy}</p>
+        <p class="modal-product__price">Price: ${price}$</p>
+        <button class="modal-product__buy-btn" type="button">Buy</button>
+      </div>`;
+
+  refs.modalProduct.innerHTML = markup;
+
+  // todo: перевірка чи є цей продукт в списку бажаних та кошике для оновлення статутсу кнопок
+}
+
+export function hideNotFound() {
+  refs.notFound.classList.remove('not-found--visible');
+}
+export function showNotFound() {
+  refs.notFound.classList.add('not-found--visible');
+}
+export function clearProductList() {
+  refs.productsList.innerHTML = '';
 }
