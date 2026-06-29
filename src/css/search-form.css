@@ -31,7 +31,7 @@
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 
   &:focus {
-    outline: 2px solid #ff6b0a;
+    outline: 2px solid var(--accent-color);
     background: #fff;
     box-shadow: 0 0 8px rgba(255, 107, 10, 0.2);
   }
@@ -54,7 +54,7 @@
 
   border: none;
   border-radius: 30px;
-  background: #ff6b0a;
+  background: var(--accent-color);
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -92,7 +92,7 @@
   transition: opacity 0.3s, visibility 0.3s;
 
   &:hover {
-    color: #ff6b0a;
+    color: var(--accent-color);
   }
 }
 .search-form__btn-clear--visible {

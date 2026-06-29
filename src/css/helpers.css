@@ -15,7 +15,9 @@
   align-items: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
   z-index: 100;
 }
 
@@ -35,7 +37,7 @@
   width: 40px;
   height: 40px;
   background-color: transparent;
-  border: 2px solid #ff6b0a;
+  border: 2px solid var(--accent-color);
   border-radius: 50%;
   font-size: 20px;
   cursor: pointer;

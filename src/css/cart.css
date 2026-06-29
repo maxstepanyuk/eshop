@@ -31,7 +31,7 @@
   color: #2d3748;
   font-size: 1.5rem;
 
-  border-bottom: 2px solid #ff6b0a;
+  border-bottom: 2px solid var(--accent-color);
 }
 
 .cart-summary__list {
@@ -63,7 +63,7 @@
   font-weight: 600;
 
   &:not(:last-child) {
-    color: #ff6b0a;
+    color: var(--accent-color);
   }
 }
 
@@ -76,7 +76,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  background: #ff6b0a;
+  background: var(--accent-color);
   cursor: pointer;
   border: none;
   border-radius: 8px;

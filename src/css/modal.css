@@ -58,7 +58,7 @@
 }
 
 .modal__close-btn:hover::after {
-  color: #ff6b0a;
+  color: var(--accent-color);
 }
 
 .modal-product {
@@ -112,7 +112,7 @@
   font-weight: 500;
 
   border-radius: 20px;
-  background: #ff6b0a;
+  background: var(--accent-color);
 }
 
 .modal-product__description {
@@ -129,7 +129,7 @@
 .modal-product__price {
   margin: 1rem 0;
 
-  color: #ff6b0a;
+  color: var(--accent-color);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -184,7 +184,7 @@
 }
 
 .modal-product__btn--cart {
-  background: #ff6b0a;
+  background: var(--accent-color);
   color: white;
 }
 
@@ -196,8 +196,8 @@
 
 .modal-product__btn--wishlist {
   background: white;
-  color: #ff6b0a;
-  border: 2px solid #ff6b0a;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
 }
 
 .modal-product__btn--wishlist:hover {

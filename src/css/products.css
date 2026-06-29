@@ -41,7 +41,7 @@
   font-weight: 600;
 
   .products__item:hover & {
-    color: #ff6b0a;
+    color: var(--accent-color);
   }
 }
 
