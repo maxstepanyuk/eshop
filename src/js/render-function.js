@@ -1,4 +1,5 @@
 import { refs } from './refs';
+import { isInCart, isInWishlist } from './storage';
 
 export function renderCategories(categories) {
   const categoriesWithAll = ['All', ...categories];
@@ -38,6 +39,7 @@ export function renderProducts(products) {
 }
 
 export function renderProductModal({
+  id,
   thumbnail,
   title,
   category,
@@ -65,7 +67,7 @@ export function renderProductModal({
 
   refs.modalProduct.innerHTML = markup;
 
-  // todo: перевірка чи є цей продукт в списку бажаних та кошике для оновлення статутсу кнопок
+  updateModalButtons(id);
 }
 
 export function hideNotFound() {
@@ -74,6 +76,33 @@ export function hideNotFound() {
 export function showNotFound() {
   refs.notFound.classList.add('not-found--visible');
 }
+
 export function clearProductList() {
   refs.productsList.innerHTML = '';
+}
+
+export function hideLoader() {
+  refs.loader.classList.add('is-hidden');
+}
+export function showLoader() {
+  refs.loader.classList.remove('is-hidden');
+}
+
+export function updateModalButtons(productId) {
+  if (isInCart(productId)) {
+    refs.addToCartBtn.textContent = 'Remove from Cart';
+  } else {
+    refs.addToCartBtn.textContent = 'Add to Cart';
+  }
+
+  if (isInWishlist(productId)) {
+    refs.addToWhishListBtn.textContent = 'Remove from Wishlist';
+  } else {
+    refs.addToWhishListBtn.textContent = 'Add to Wishlist';
+  }
+}
+
+export function updateCounter(cartItems, wishList){
+  refs.cartCount.textContent = cartItems.length;
+  refs.wishlistCount.textContent = wishList.length;
 }

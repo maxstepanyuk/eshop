@@ -1,5 +1,6 @@
 import {
   handleAddToCartClick,
+  handleAddToWishListClick,
   handleCategoryClick,
   handleProductListClick,
   handleSerchClear,
@@ -14,4 +15,6 @@ refs.categoriesList.addEventListener('click', handleCategoryClick);
 refs.productsList.addEventListener('click', handleProductListClick);
 refs.searchForm.addEventListener('submit', handleSerchFormSubmit);
 refs.searchFormClearButton.addEventListener('click', handleSerchClear)
+
 refs.addToCartBtn.addEventListener('click', handleAddToCartClick)
+refs.addToWhishListBtn.addEventListener('click', handleAddToWishListClick)

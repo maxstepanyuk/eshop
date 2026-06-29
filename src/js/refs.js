@@ -6,6 +6,10 @@ export const refs = {
   modalProduct: document.querySelector('.modal-product'),
   modalCloseBtn: document.querySelector('.modal__close-btn'),
   searchForm: document.querySelector('.search-form'),
-  searchFormClearButton: document.querySelector(".search-form__btn-clear"),
+  searchFormClearButton: document.querySelector('.search-form__btn-clear'),
   addToCartBtn: document.querySelector('.modal-product__btn--cart'),
+  addToWhishListBtn: document.querySelector('.modal-product__btn--wishlist'),
+  loader: document.querySelector('.loader'),
+  wishlistCount: document.querySelector('[data-wishlist-count]'),
+  cartCount: document.querySelector('[data-cart-count]'),
 };

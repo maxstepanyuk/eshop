@@ -13,35 +13,47 @@ import {
 import { refs } from './refs';
 import {
   clearProductList,
+  hideLoader,
   hideNotFound,
   renderCategories,
   renderProductModal,
   renderProducts,
+  showLoader,
   showNotFound,
+  updateCounter,
 } from './render-function';
-import { isInCart } from './storage';
+import {
+  addToCart,
+  addToWishlist,
+  getCartItems,
+  getWishlistItems,
+  isInCart,
+  isInWishlist,
+  removeFromCart,
+  removeFromWishlist,
+} from './storage';
 
 let currentProductId = null;
 
-export function initHomePage(event) {
-  getCategories()
-    .then(data => {
-      renderCategories(data);
-    })
-    .catch(e => {
-      console.log('Error on load Categories in Home page', e);
-    });
+export async function initHomePage(event) {
+  try {
+    showLoader();
 
-  getProducts()
-    .then(({ products }) => {
-      renderProducts(products);
-    })
-    .catch(e => {
-      console.log('Error on load Products in Home page', e);
-    });
+    const data = await getCategories();
+    renderCategories(data);
+
+    const { products } = await getProducts();
+    renderProducts(products);
+
+    updateCounter(getCartItems(), getWishlistItems());
+  } catch (error) {
+    console.log('Error on init Home page', e);
+  } finally {
+    hideLoader();
+  }
 }
 
-export function handleCategoryClick(event) {
+export async function handleCategoryClick(event) {
   const categoryButtonTarget = event.target.closest('.categories__btn');
   if (!categoryButtonTarget) {
     return;
@@ -61,32 +73,29 @@ export function handleCategoryClick(event) {
   const categorySlag = categoryButtonTarget.textContent.trim();
   let productsData = getProducts();
 
-  if (categorySlag === 'All') {
-    getProducts()
-      .then(({ products }) => {
+  try {
+    showLoader();
+    if (categorySlag === 'All') {
+      const { products } = await getProducts();
+      renderProducts(products);
+    } else {
+      const { products } = await getProductsByCategory(categorySlag);
+      if (products.length > 0) {
         renderProducts(products);
-      })
-      .catch(e => {
-        console.log('Error on load Products in Home page', e);
-      });
-  } else {
-    getProductsByCategory(categorySlag)
-      .then(({ products }) => {
-        if (products.length > 0) {
-          renderProducts(products);
-          hideNotFound();
-        } else {
-          showNotFound();
-        }
-      })
-      .catch(e => {
-        console.log('Error on load Products by Category in Home page', e);
+        hideNotFound();
+      } else {
         showNotFound();
-      });
+      }
+    }
+  } catch (e) {
+    console.log('Error on load Ctegory Products in Home page', e);
+    showNotFound();
+  } finally {
+    hideLoader();
   }
 }
 
-export function handleProductListClick(event) {
+export async function handleProductListClick(event) {
   const productItem = event.target.closest('.products__item');
 
   if (!productItem) return;
@@ -94,52 +103,59 @@ export function handleProductListClick(event) {
   const productId = Number(productItem.dataset.id);
   currentProductId = productId;
 
-  getProductById(productId)
-    .then(product => {
-      openModal();
-      renderProductModal(product);
-    })
-    .catch(e => {
-      console.log('Error on handleProductListClick', e);
-    });
+  try {
+    showLoader();
+    const product = await getProductById(productId);
+    openModal();
+    renderProductModal(product);
+  } catch (e) {
+    console.log('Error on handleProductListClick', e);
+  } finally {
+    hideLoader();
+  }
 }
 
-export function handleSerchFormSubmit(event) {
+export async function handleSerchFormSubmit(event) {
   event.preventDefault();
   const serachValue = event.target.elements.searchValue.value.trim();
   if (serachValue === '') {
     showToast('enter a serch queary', 'warning');
     return;
   }
-  getProductsBySearchQueary(serachValue)
-    .then(({ products }) => {
-      clearProductList();
-      if (products.length > 0) {
-        renderProducts(products);
-        hideNotFound();
-      } else {
-        showNotFound();
-      }
-    })
-    .catch(e => {
-      console.log('Error on handleSerchFormSubmit', e);
+
+  try {
+    showLoader();
+    const { products } = await getProductsBySearchQueary(serachValue);
+    clearProductList();
+    if (products.length > 0) {
+      renderProducts(products);
+      hideNotFound();
+    } else {
       showNotFound();
-    });
+    }
+  } catch (e) {
+    console.log('Error on handleSerchFormSubmit', e);
+    showNotFound();
+  } finally {
+    hideLoader();
+  }
 }
 
-export function handleSerchClear(event) {
+export async function handleSerchClear(event) {
   refs.searchForm.reset();
 
   clearProductList();
 
-  getProducts()
-    .then(({ products }) => {
-      renderProducts(products);
-      hideNotFound();
-    })
-    .catch(e => {
-      console.log('Error on handleSerchClear', e);
-    });
+  try {
+    showLoader();
+    const { products } = await getProducts();
+    renderProducts(products);
+    hideNotFound();
+  } catch (e) {
+    console.log('Error on handleSerchClear', e);
+  } finally {
+    hideLoader();
+  }
 }
 
 export function handleAddToCartClick(event) {
@@ -147,7 +163,38 @@ export function handleAddToCartClick(event) {
     return;
   }
 
-  if(isInCart(currentProductId)){
-    // todo: тут закінчили
+  try {
+    if (isInCart(currentProductId)) {
+      removeFromCart(currentProductId);
+      showToast('Product removed from Cart', 'info');
+      refs.addToCartBtn.textContent = 'Add to Cart';
+    } else {
+      addToCart(currentProductId);
+      showToast('Product added from Cart', 'info');
+      refs.addToCartBtn.textContent = 'Remove to Cart';
+    }
+    updateCounter(getCartItems(), getWishlistItems());
+  } catch (error) {
+    console.log('Eroor updating cart: ', error);
+  }
+}
+
+export function handleAddToWishListClick(event) {
+  if (!currentProductId) {
+    return;
+  }
+
+  try {
+    if (isInWishlist(currentProductId)) {
+      removeFromWishlist(currentProductId)
+      showToast('Product removed from Wishlist', 'info');
+      refs.addToWhishListBtn.textContent = 'Add to Wishlist';
+    } else {
+      addToWishlist(currentProductId)
+      showToast('Product added to Cart', 'info');
+      refs.addToWhishListBtn.textContent = 'Remove from Wishlist';
+    }
+  } catch (error) {
+    console.log('Error updating wishlist: ', error);
   }
 }
